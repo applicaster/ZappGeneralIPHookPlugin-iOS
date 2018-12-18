@@ -17,7 +17,7 @@
   "description": "Plugin that on launch check for validation via ip address",
   "type": "general",
   "screen": false,
-  "identifier": "ip_hook",
+  "identifier": "ip_login",
   "ui_builder_support": true,
   "dependency_name": "ZappGeneralIPHookPlugin",
   "dependency_version": "0.0.1",
