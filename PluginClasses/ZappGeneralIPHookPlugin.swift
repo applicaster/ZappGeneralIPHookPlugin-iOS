@@ -37,31 +37,48 @@ import ZappPlugins
     }
     
     //MARK: - ZPAppLoadingHookProtocol implementation
-    @objc public func executeOnApplicationReady(displayViewController: UIViewController?, completion: (() -> Void)?) {
+    @objc public func executeOnLaunch(completion: (() -> Void)?){
         if let configuration = self.configurationJSON,
             let stringUrl = configuration[entryPointKey] as? String,
             !stringUrl.isEmpty,
             let url = NSURL(string: stringUrl) as URL?{
             sendURL(url: url, finished: { isSucceeded in
-                if isSucceeded{
+                if isSucceeded{                    
                     if self.checkValidation(){
-                    completion?()
-                    return
+                        completion?()
+                        return
                     }
-                }})
-            }
-        self.showErrorDialog()
+                }
+                self.showErrorDialog()
+            })
+        }else{
+            self.showErrorDialog()
+        }
     }
     
     //MARK: - Private Methods implementation
     private func showErrorDialog(){
+        guard let configuration = self.configurationJSON,
+            let message = configuration[errorMessageKey] as? String,
+            !message.isEmpty,
+            let zappStyle = configuration[errorMessageTextStyleKey] as? String,
+            !zappStyle.isEmpty,
+            let bgColor = configuration[errorMessageDialogBgColorKey] as? String,
+            !bgColor.isEmpty
+            else {
+                return
+        }
         
+        let errorViewController = ZappHookErrorViewController.init(backgroundColor:bgColor, errorMessage: message, zappStyleKey: zappStyle)
+        DispatchQueue.main.async{
+            ZAAppConnector.sharedInstance().navigationDelegate.present(errorViewController, presentationType: .push, animated: false)
+        }
     }
     
     private func checkValidation() -> Bool{
         if let configuration = self.configurationJSON,
             let ipsStringArray = configuration[authorizeIpArrayKey] as? String{
-            let ipsArray = ipsStringArray.split(separator: ",")
+            let ipsArray = ipsStringArray.components(separatedBy: ",")
             for ip in ipsArray{
                 if String(ip) == self.ipResult{
                     return true
@@ -70,7 +87,7 @@ import ZappPlugins
         }
         return false
     }
-
+    
     
     private func sendURL(url:URL, finished: @escaping ((_ isSucceeded: Bool)->Void)){
         let request = URLRequest(url: url)
@@ -81,16 +98,22 @@ import ZappPlugins
                 print("Login Request failed with error: \(String(describing: responseError))")
                 return finished(false)
             }
-
-            // APIs usually respond with the data you just sent in your request
-            if let data = responseData, let utf8Representation = String(data: data, encoding: .utf8) {
-                print("response: ", utf8Representation)
-                self.ipResult = utf8Representation
-                return finished(true)
-            } else {
-                print("no readable data received in response")
-                return finished(false)
+            
+            if responseData != nil{
+                var jsonData:[String:String]?
+                do {
+                    jsonData = try JSONSerialization.jsonObject(with:responseData!, options: .mutableContainers) as? [String:String]
+                }
+                catch _ as NSError {
+                    return finished(false)
+                }
+                
+                if jsonData?["result"] != nil{
+                    self.ipResult = jsonData?["result"]
+                    return finished(true)
+                }
             }
+            return finished(false)
         }
         task.resume()
     }
