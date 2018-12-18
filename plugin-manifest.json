@@ -1,0 +1,58 @@
+{
+  "api": {
+    "require_startup_execution": true,
+    "class_name": "ZappGeneralIPHookPlugin",
+    "modules": [
+
+    ]
+  },
+  "dependency_repository_url": [
+    "https://github.com/applicaster/ZappGeneralIPHookPlugin-iOS"
+  ],
+  "platform": "ios",
+  "author_name": "Yael Buchman",
+  "author_email": "y.bochman@applicaster.com",
+  "manifest_version": "0.0.1",
+  "name": "IP Hook Plugin",
+  "description": "Plugin that on launch check for validation via ip address",
+  "type": "general",
+  "screen": false,
+  "identifier": "ip_hook",
+  "ui_builder_support": true,
+  "dependency_name": "ZappGeneralIPHookPlugin",
+  "dependency_version": "0.0.1",
+  "whitelisted_account_ids": [
+    "5c11241ccbec9200087ed19e"
+  ],
+  "min_zapp_sdk": "10.0.3",
+  "deprecated_since_zapp_sdk": "",
+  "unsupported_since_zapp_sdk": "",
+  "react_native": false,
+  "custom_configuration_fields": [
+    {
+      "type": "text",
+      "key": "entry_point",
+      "tooltip_text": "api for the request"
+    },
+    {
+      "type": "text",
+      "key": "unauthorized_message",
+      "tooltip_text": "The message that will be displayed if the user is not authorized"
+    },
+    {
+      "type": "text",
+      "key": "authorize_ip_array",
+      "tooltip_text": "The array of ips that are authorized to use the app"
+    },
+    {
+      "type": "text",
+      "key": "text_style",
+      "tooltip_text": "unauthorized_message key style from Zapp"
+    },
+    {
+      "type": "text",
+      "key": "dialog_bg_color",
+      "tooltip_text": "dialog bg color"
+    }
+  ]
+}
