@@ -46,6 +46,7 @@ open class ZappHookErrorViewController: UIViewController {
         super.viewWillAppear(animated)
         self.errorMessageLabel.text = errorMessage
         self.errorMessageLabel.backgroundColor = UIColor.init(hex: backgroundColor)
+        self.errorMessageLabel.numberOfLines = 0
         self.view.backgroundColor = UIColor.init(hex: "00000000")
         
         ZAAppConnector.sharedInstance().layoutsStylesDelegate.setLabelStyle?(self.errorMessageLabel, withKeys: [kZappLayoutStylesFontKey:zappStyleKey as Any])

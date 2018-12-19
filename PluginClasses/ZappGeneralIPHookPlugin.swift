@@ -71,7 +71,16 @@ import ZappPlugins
         
         let errorViewController = ZappHookErrorViewController.init(backgroundColor:bgColor, errorMessage: message, zappStyleKey: zappStyle)
         DispatchQueue.main.async{
-            ZAAppConnector.sharedInstance().navigationDelegate.present(errorViewController, presentationType: .push, animated: false)
+            
+            let win = UIWindow(frame: UIScreen.main.bounds)
+            let vc = UIViewController()
+            vc.view.backgroundColor = .clear
+            win.rootViewController = vc
+            win.windowLevel = UIWindow.Level.alert + 1
+            win.makeKeyAndVisible()
+            vc.present(errorViewController, animated: true, completion: nil)
+            
+            //ZAAppConnector.sharedInstance().navigationDelegate.present(errorViewController, presentationType: .push, animated: false)
         }
     }
     
