@@ -88,12 +88,16 @@ import ZappPlugins
         if let configuration = self.configurationJSON,
             let ipsStringArray = configuration[authorizeIpArrayKey] as? String{
             let ipsArray = ipsStringArray.components(separatedBy: ",")
+            print("result:", self.ipResult as Any, " array:",ipsArray)
+
             for ip in ipsArray{
                 if String(ip) == self.ipResult{
+                    print("validation succeded")
                     return true
                 }
             }
         }
+        print("validation failed")
         return false
     }
     
